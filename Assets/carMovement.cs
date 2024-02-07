@@ -87,7 +87,7 @@ public class carMovement : MonoBehaviour
         }
         else
         {
-            this.GetComponent<Rigidbody>().velocity = Vector3.forward * -worldMover.GetComponent<WorldMoveRespawn>().worldMoveSpeed;
+            this.GetComponent<Rigidbody>().velocity = Vector3.forward * -worldMover.GetComponent<SpawnAndMove>().worldMoveSpeed;
         }
     }
 
@@ -125,5 +125,21 @@ public class carMovement : MonoBehaviour
 
             yield return null;
         }
+    }
+
+    public IEnumerator PushCarConstantly(float forceMagnitude, float pushTime)
+    {
+        Vector3 direction = transform.right;
+        float timeElapsed = 0f;
+
+        while (timeElapsed < pushTime)
+        {
+            timeElapsed += Time.deltaTime;
+
+            transform.position += direction * forceMagnitude * Time.deltaTime;
+
+            yield return null;
+        }
+
     }
 }

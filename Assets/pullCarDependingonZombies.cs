@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public class pullCarDependingonZombies : MonoBehaviour
 {
@@ -37,7 +39,17 @@ public class pullCarDependingonZombies : MonoBehaviour
 
                     foreach (var item in zombiesLeft)
                     {
-                        StartCoroutine(player.GetComponent<carMovement>().PushCarSmoothly(-3f - leftStMultipier, .25f + Random.Range(0.0f, 1.0f)));
+                        var force = item.gameObject.GetComponent<zombieLifePrueba>().force;
+                        //var peso = item.gameObject.GetComponent<zombieLifePrueba>().peso;
+
+                        if (force>1)
+                        {
+                            StartCoroutine(player.GetComponent<carMovement>().PushCarSmoothly(/*force **/ -3f /*- leftStMultipier*/, .25f + Random.Range(0.0f, 1.0f)));
+                        }
+                        //else if (force==1)
+                        //{
+                        //    StartCoroutine(player.GetComponent<carMovement>().PushCarConstantly(-force, 5));
+                        //}
                     }
                 }
             }
@@ -51,7 +63,15 @@ public class pullCarDependingonZombies : MonoBehaviour
 
                     foreach (var item in zombiesRight)
                     {
-                        StartCoroutine(player.GetComponent<carMovement>().PushCarSmoothly(3f + rigthStMultipier, .25f + Random.Range(0.0f, 1.0f)));
+                        var force = item.gameObject.GetComponent<zombieLifePrueba>().force;
+                        if (force>1)
+                        {
+                            StartCoroutine(player.GetComponent<carMovement>().PushCarSmoothly(/*force * */3f /*+ rigthStMultipier*/, .25f + Random.Range(0.0f, 1.0f)));
+                        }
+                        //else if (force == 1)
+                        //{
+                        //    StartCoroutine(player.GetComponent<carMovement>().PushCarConstantly(-force, 5));
+                        //}
                     }
                 }
             }
@@ -70,6 +90,7 @@ public class pullCarDependingonZombies : MonoBehaviour
     {
         if (other.transform.tag == "Zombie")
         {
+            var peso = other.gameObject.GetComponent<zombieLifePrueba>().peso;
 
             if (other.transform.position.x < player.transform.position.x)
             {
@@ -79,7 +100,7 @@ public class pullCarDependingonZombies : MonoBehaviour
                 print("this object is to the left");
                 zombiesLeft.Add(other.gameObject);
 
-                StartCoroutine(player.GetComponent<carMovement>().PushCarSmoothly(1f, .25f));
+                StartCoroutine(player.GetComponent<carMovement>().PushCarSmoothly(1f*peso, .25f));
             }
             else if (other.transform.position.x > player.transform.position.x)
             {
@@ -89,7 +110,7 @@ public class pullCarDependingonZombies : MonoBehaviour
                 print("this object is to the right");
                 zombiesRight.Add(other.gameObject);
 
-                StartCoroutine(player.GetComponent<carMovement>().PushCarSmoothly(-1f, .25f));
+                StartCoroutine(player.GetComponent<carMovement>().PushCarSmoothly(-1f * peso, .25f));
             }
         }
     }
